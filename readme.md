@@ -3,5 +3,7 @@ atitus
 Aulas pelo MAGO MARCÃO ROBERTO DOS SANTOS 
 Bernardo Antunes Heckler 
 RA: 1137118 
-Trabalho Individual
+Samuel Barquel Nunes
+RA: 1136923
+Trabalho em Dupla
 
