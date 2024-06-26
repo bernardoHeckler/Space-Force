@@ -13,6 +13,7 @@ fundo = pygame.image.load("Recursos/estratosferaFundoDeTela.png")
 fundoStart = pygame.image.load("Recursos/fundoStart.png")
 fundoDead = pygame.image.load("Recursos/fundoDead.png")
 asteroide = pygame.image.load("Recursos/asteroide.png")
+asteroideVermelho = pygame.image.load("Recursos/asteroideVermelho.png")
 tamanho = (800, 600)
 tela = pygame.display.set_mode(tamanho)
 pygame.display.set_caption("Space Force")
@@ -32,7 +33,7 @@ def dead(nome, pontos):
     tela.blit(fundoDead, (0,0))
     texto = fonteMorte.render("GAME OVER", True, branco)
     tela.blit(texto, (20, 250))
-    texto_pontos = fonte.render(nome + "PONTOS: " + str(pontos), True, branco)
+    texto_pontos = fonte.render(nome + "- PONTOS: " + str(pontos), True, branco)
     tela.blit(texto_pontos, (10, 10))
     pygame.display.update()
     pygame.time.wait(2000)
@@ -40,22 +41,31 @@ def dead(nome, pontos):
 def jogar(nome):
     pygame.mixer.Sound.play(missileSound)
     pygame.mixer.music.play(-1)
+    
     posicaoXPersona = 300
     posicaoYPersona = 450
     movimentoXPersona = 0
-    posicaoXMissel = 400
+
+    posicaoXMissel = random.randint(0, 800 - 100)
     posicaoYMissel = -90
     velocidadeMissel = 1
+
+    posicaoXMisselVermelho = random.randint(0, 800 - 100)
+    posicaoYMisselVermelho = -200
+    velocidadeMisselVermelho = 1
+
     pontos = 0
     larguraPersona = 150
     alturaPersona = 149
     larguraMissel = 100
     alturaMissel = 76
+    larguraMisselVermelho = 100
+    alturaMisselVermelho = 76
     dificuldade = 20
 
     alien_rect = alien.get_rect()
     alien_rect.x = 0
-    alien_rect.y = (300 - alien_rect.height) // 2
+    alien_rect.y = (600 - alien_rect.height) // 2
 
     alien_speed = 3
     direita = True
@@ -91,7 +101,7 @@ def jogar(nome):
 
         posicaoYMissel += velocidadeMissel
         if posicaoYMissel > 600:
-            posicaoYMissel = -240
+            posicaoYMissel = -260
             pontos += 1
             velocidadeMissel += 1
             posicaoXMissel = random.randint(0, 800 - larguraMissel)
@@ -99,22 +109,39 @@ def jogar(nome):
 
         tela.blit(asteroide, (posicaoXMissel, posicaoYMissel))
 
+        posicaoYMisselVermelho += velocidadeMisselVermelho
+        if posicaoYMisselVermelho > 600:
+            posicaoYMisselVermelho = -200
+            pontos += 1
+            velocidadeMisselVermelho += 1
+            posicaoXMisselVermelho = random.randint(0, 800 - larguraMisselVermelho)
+            pygame.mixer.Sound.play(missileSound)
 
-        texto = fonte.render(nome + "PONTOS: " + str(pontos), True, branco)
+        tela.blit(asteroideVermelho, (posicaoXMisselVermelho, posicaoYMisselVermelho))
+
+        texto = fonte.render(nome + "- PONTOS: " + str(pontos), True, branco)
         tela.blit(texto, (10, 10))
 
         pixelsPersonaX = list(range(posicaoXPersona, posicaoXPersona + larguraPersona))
         pixelsPersonaY = list(range(posicaoYPersona, posicaoYPersona + alturaPersona))
         pixelsMisselX = list(range(posicaoXMissel, posicaoXMissel + larguraMissel))
         pixelsMisselY = list(range(posicaoYMissel, posicaoYMissel + alturaMissel))
+        pixelsMisselXVermelho = list(range(posicaoXMisselVermelho, posicaoXMisselVermelho + larguraMisselVermelho))
+        pixelsMisselYVermelho = list(range(posicaoYMisselVermelho, posicaoYMisselVermelho + alturaMisselVermelho))
 
         if len(set(pixelsMisselY).intersection(pixelsPersonaY)) > dificuldade:
             if len(set(pixelsMisselX).intersection(pixelsPersonaX)) > dificuldade:
                 dead(nome, pontos)
                 return
 
+        if len(set(pixelsMisselYVermelho).intersection(pixelsPersonaY)) > dificuldade:
+            if len(set(pixelsMisselXVermelho).intersection(pixelsPersonaX)) > dificuldade:
+                dead(nome, pontos)
+                return
+
         pygame.display.update()
         relogio.tick(60)
+
 
 def dead(nome, pontos):
     pygame.mixer.music.stop()
