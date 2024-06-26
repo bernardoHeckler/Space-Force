@@ -6,106 +6,115 @@ from tkinter import simpledialog
 pygame.init()
 
 relogio = pygame.time.Clock()
-icone  = pygame.image.load("Recursos/icone.png")
+icone = pygame.image.load("Recursos/icone.png")
 nave = pygame.image.load("Recursos/nave.png")
+alien = pygame.image.load("Recursos/alien.png")
 fundo = pygame.image.load("Recursos/estratosferaFundoDeTela.png")
 fundoStart = pygame.image.load("Recursos/fundoStart.png")
 fundoDead = pygame.image.load("Recursos/fundoDead.png")
 asteroide = pygame.image.load("Recursos/asteroide.png")
-tamanho = (800,600)
-tela = pygame.display.set_mode( tamanho ) 
-pygame.display.set_caption("Iron Man do Marcão")
+tamanho = (800, 600)
+tela = pygame.display.set_mode(tamanho)
+pygame.display.set_caption("Space Force")
 pygame.display.set_icon(icone)
 missileSound = pygame.mixer.Sound("Recursos/missile.mp3")
 explosaoSound = pygame.mixer.Sound("Recursos/explosao.wav")
-fonte = pygame.font.SysFont("comicsans",28)
-fonteStart = pygame.font.SysFont("comicsans",55)
-fonteMorte = pygame.font.SysFont("arial",120)
+fonte = pygame.font.SysFont("comicsans", 28)
+fonteStart = pygame.font.SysFont("comicsans", 55)
+fonteMorte = pygame.font.SysFont("arial", 120)
 pygame.mixer.music.load("Recursos/ironsound.mp3")
 
+amarelo = (255, 255, 0)
+branco = (255, 255, 255)
+preto = (0, 0, 0)
 
-amarelo = (255,255,0)
-branco = (255,255,255)
-preto = (0, 0 ,0 )
+def dead(nome, pontos):
+    tela.blit(fundoDead, (0,0))
+    texto = fonteMorte.render("GAME OVER", True, branco)
+    tela.blit(texto, (20, 250))
+    texto_pontos = fonte.render(nome + "PONTOS: " + str(pontos), True, branco)
+    tela.blit(texto_pontos, (10, 10))
+    pygame.display.update()
+    pygame.time.wait(2000)
 
 def jogar(nome):
     pygame.mixer.Sound.play(missileSound)
     pygame.mixer.music.play(-1)
     posicaoXPersona = 300
     posicaoYPersona = 450
-    movimentoXPersona  = 0
-    movimentoYPersona  = 0
+    movimentoXPersona = 0
     posicaoXMissel = 400
     posicaoYMissel = -90
     velocidadeMissel = 1
     pontos = 0
     larguraPersona = 150
     alturaPersona = 149
-    larguaMissel  = 100
-    alturaMissel  = 76
-    dificuldade  = 20
+    larguraMissel = 100
+    alturaMissel = 76
+    dificuldade = 20
+
+    alien_rect = alien.get_rect()
+    alien_rect.x = 0
+    alien_rect.y = (300 - alien_rect.height) // 2
+
+    alien_speed = 3
+    direita = True
 
     while True:
         for evento in pygame.event.get():
             if evento.type == pygame.QUIT:
                 quit()
-            elif evento.type == pygame.KEYDOWN and evento.key == pygame.K_RIGHT:
-                movimentoXPersona = 10
-            elif evento.type == pygame.KEYDOWN and evento.key == pygame.K_LEFT:
-                movimentoXPersona = -10
-            elif evento.type == pygame.KEYUP and evento.key == pygame.K_RIGHT:
-                movimentoXPersona = 0
-            elif evento.type == pygame.KEYUP and evento.key == pygame.K_LEFT:
-                movimentoXPersona = 0
-                
-        posicaoXPersona = posicaoXPersona + movimentoXPersona            
-        posicaoYPersona = posicaoYPersona + movimentoYPersona            
-        
-        if posicaoXPersona < 0 :
-            posicaoXPersona = 10
-        elif posicaoXPersona > 650:
-            posicaoXPersona = 640
-            
-        if posicaoYPersona < 0 :
-            posicaoYPersona = 10
-        elif posicaoYPersona > 473:
-            posicaoYPersona = 463
-        
-            
+            elif evento.type == pygame.KEYDOWN:
+                if evento.key == pygame.K_RIGHT:
+                    movimentoXPersona = 10
+                elif evento.key == pygame.K_LEFT:
+                    movimentoXPersona = -10
+            elif evento.type == pygame.KEYUP:
+                if evento.key in [pygame.K_RIGHT, pygame.K_LEFT]:
+                    movimentoXPersona = 0
+
+        posicaoXPersona += movimentoXPersona
+
+        if posicaoXPersona < 0:
+            posicaoXPersona = 0
+        elif posicaoXPersona > 800 - larguraPersona:
+            posicaoXPersona = 800 - larguraPersona
+
+        alien_rect.x += alien_speed if direita else -alien_speed
+        if alien_rect.x > 800 - alien_rect.width or alien_rect.x < 0:
+            direita = not direita
+
         tela.fill(branco)
-        tela.blit(fundo, (0,0) )
-        #pygame.draw.circle(tela, preto, (posicaoXPersona,posicaoYPersona), 40, 0 )
-        tela.blit( nave, (posicaoXPersona, posicaoYPersona) )
-        
-        posicaoYMissel = posicaoYMissel + velocidadeMissel
+        tela.blit(fundo, (0, 0))
+        tela.blit(nave, (posicaoXPersona, posicaoYPersona))
+        tela.blit(alien, alien_rect)
+
+        posicaoYMissel += velocidadeMissel
         if posicaoYMissel > 600:
             posicaoYMissel = -240
-            pontos = pontos + 1
-            velocidadeMissel = velocidadeMissel + 1
-            posicaoXMissel = random.randint(0,800)
+            pontos += 1
+            velocidadeMissel += 1
+            posicaoXMissel = random.randint(0, 800 - larguraMissel)
             pygame.mixer.Sound.play(missileSound)
-            
-            
-        tela.blit( asteroide, (posicaoXMissel, posicaoYMissel) )
-        
-        texto = fonte.render(nome+"- Pontos: "+str(pontos), True, branco)
-        tela.blit(texto, (10,10))
-        
-        pixelsPersonaX = list(range(posicaoXPersona, posicaoXPersona+larguraPersona))
-        pixelsPersonaY = list(range(posicaoYPersona, posicaoYPersona+alturaPersona))
-        pixelsMisselX = list(range(posicaoXMissel, posicaoXMissel + larguaMissel))
+
+        tela.blit(asteroide, (posicaoXMissel, posicaoYMissel))
+
+
+        texto = fonte.render(nome + "PONTOS: " + str(pontos), True, branco)
+        tela.blit(texto, (10, 10))
+
+        pixelsPersonaX = list(range(posicaoXPersona, posicaoXPersona + larguraPersona))
+        pixelsPersonaY = list(range(posicaoYPersona, posicaoYPersona + alturaPersona))
+        pixelsMisselX = list(range(posicaoXMissel, posicaoXMissel + larguraMissel))
         pixelsMisselY = list(range(posicaoYMissel, posicaoYMissel + alturaMissel))
-        
-        #print( len( list( set(pixelsMisselX).intersection(set(pixelsPersonaX))   ) )   )
-        if  len( list( set(pixelsMisselY).intersection(set(pixelsPersonaY))) ) > dificuldade:
-            if len( list( set(pixelsMisselX).intersection(set(pixelsPersonaX))   ) )  > dificuldade:
+
+        if len(set(pixelsMisselY).intersection(pixelsPersonaY)) > dificuldade:
+            if len(set(pixelsMisselX).intersection(pixelsPersonaX)) > dificuldade:
                 dead(nome, pontos)
-        
-    
-        
+                return
+
         pygame.display.update()
         relogio.tick(60)
-
 
 def dead(nome, pontos):
     pygame.mixer.music.stop()
