@@ -8,6 +8,7 @@ pygame.init()
 relogio = pygame.time.Clock()
 icone = pygame.image.load("Recursos/icone.png")
 nave = pygame.image.load("Recursos/nave.png")
+lua = pygame.image.load("Recursos/lua.png")
 alien = pygame.image.load("Recursos/alien.png")
 fundo = pygame.image.load("Recursos/estratosferaFundoDeTela.png")
 fundoStart = pygame.image.load("Recursos/fundoStart.png")
@@ -18,12 +19,14 @@ tamanho = (800, 600)
 tela = pygame.display.set_mode(tamanho)
 pygame.display.set_caption("Space Force")
 pygame.display.set_icon(icone)
+tpSound = pygame.mixer.Sound("Recursos/tpSound.mp3")
 missileSound = pygame.mixer.Sound("Recursos/missile.mp3")
 explosaoSound = pygame.mixer.Sound("Recursos/explosao.wav")
 fonte = pygame.font.SysFont("comicsans", 28)
 fonteStart = pygame.font.SysFont("comicsans", 55)
 fonteMorte = pygame.font.SysFont("arial", 120)
 pygame.mixer.music.load("Recursos/ironsound.mp3")
+
 
 amarelo = (255, 255, 0)
 branco = (255, 255, 255)
@@ -33,7 +36,7 @@ def dead(nome, pontos):
     tela.blit(fundoDead, (0,0))
     texto = fonteMorte.render("GAME OVER", True, branco)
     tela.blit(texto, (20, 250))
-    texto_pontos = fonte.render(nome + "- PONTOS: " + str(pontos), True, branco)
+    texto_pontos = fonte.render(nome + "PONTOS: " + str(pontos), True, branco)
     tela.blit(texto_pontos, (10, 10))
     pygame.display.update()
     pygame.time.wait(2000)
@@ -41,6 +44,8 @@ def dead(nome, pontos):
 def jogar(nome):
     pygame.mixer.Sound.play(missileSound)
     pygame.mixer.music.play(-1)
+
+    pygame.mixer.music.set_volume(0.3)
     
     posicaoXPersona = 300
     posicaoYPersona = 450
@@ -64,11 +69,19 @@ def jogar(nome):
     dificuldade = 20
 
     alien_rect = alien.get_rect()
-    alien_rect.x = 0
-    alien_rect.y = (600 - alien_rect.height) // 2
+    alien_rect.x = random.randint(0, 800)
+    alien_rect.y = random.randint(300, 600)  # Posição vertical aleatória inicial do alien
 
     alien_speed = 3
     direita = True
+
+    alien_vertical_speed = random.choice([2, 10])  # Velocidade vertical aleatória do alien
+    alien_reappear_chance = 0.005 # Chance de o alien reaparecer em uma nova posição
+
+    raio = 50
+    pulso_velocidade = 1
+    max_raio = 60
+    min_raio = 40
 
     while True:
         for evento in pygame.event.get():
@@ -94,10 +107,32 @@ def jogar(nome):
         if alien_rect.x > 800 - alien_rect.width or alien_rect.x < 0:
             direita = not direita
 
+        # Movimento vertical aleatório do alien
+        alien_rect.y += alien_vertical_speed
+        if alien_rect.y < 0:
+            alien_vertical_speed = 1
+        elif alien_rect.y > 600 - alien_rect.height:
+            alien_vertical_speed = -1
+
+        # Verifica se o alien deve reaparecer em uma nova posição aleatória
+        if random.random() < alien_reappear_chance:
+            alien_rect.x = random.randint(0, 600)  # Reinicia o alien fora da tela à direita
+            alien_rect.y = random.randint(0, 600)  # Nova posição vertical aleatória
+            pygame.mixer.Sound.play(tpSound)
+
+
         tela.fill(branco)
         tela.blit(fundo, (0, 0))
         tela.blit(nave, (posicaoXPersona, posicaoYPersona))
         tela.blit(alien, alien_rect)
+        
+
+        raio += pulso_velocidade
+        if raio >= max_raio or raio <= min_raio:
+            pulso_velocidade = -pulso_velocidade
+
+        lua_pulsante = pygame.transform.scale(lua, (raio * 3, raio * 3)) # 150, 150
+        tela.blit(lua_pulsante, (700 - raio, 50 - raio)) # 650, 0
 
         posicaoYMissel += velocidadeMissel
         if posicaoYMissel > 600:
@@ -119,7 +154,7 @@ def jogar(nome):
 
         tela.blit(asteroideVermelho, (posicaoXMisselVermelho, posicaoYMisselVermelho))
 
-        texto = fonte.render(nome + "- PONTOS: " + str(pontos), True, branco)
+        texto = fonte.render(nome + "PONTOS: " + str(pontos), True, branco)
         tela.blit(texto, (10, 10))
 
         pixelsPersonaX = list(range(posicaoXPersona, posicaoXPersona + larguraPersona))
@@ -240,7 +275,7 @@ def start():
         tela.blit(fundoStart, (0,0))
         buttonStart = pygame.draw.rect(tela, amarelo, (300,482,250,100),0)
         buttonRanking = pygame.draw.rect(tela, preto, (570,50,200,50),0,30)
-        textoRanking = fonte.render("Ranking", True, branco)
+        textoRanking = fonte.render("RANKING", True, branco)
         tela.blit(textoRanking, (620,50))
         textoStart = fonteStart.render("START", True, preto)
         tela.blit(textoStart, (330,482))
