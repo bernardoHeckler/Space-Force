@@ -23,6 +23,8 @@ fonteStart = pygame.font.SysFont("comicsans",55)
 fonteMorte = pygame.font.SysFont("arial",120)
 pygame.mixer.music.load("Recursos/ironsound.mp3")
 
+
+amarelo = (255,255,0)
 branco = (255,255,255)
 preto = (0, 0 ,0 )
 
@@ -200,11 +202,11 @@ def start():
 
         tela.fill(branco)
         tela.blit(fundoStart, (0,0))
-        buttonStart = pygame.draw.rect(tela, preto, (35,482,750,100),0)
-        buttonRanking = pygame.draw.rect(tela, preto, (35,50,200,50),0,30)
+        buttonStart = pygame.draw.rect(tela, amarelo, (300,482,250,100),0)
+        buttonRanking = pygame.draw.rect(tela, preto, (570,50,200,50),0,30)
         textoRanking = fonte.render("Ranking", True, branco)
-        tela.blit(textoRanking, (90,50))
-        textoStart = fonteStart.render("START", True, branco)
+        tela.blit(textoRanking, (620,50))
+        textoStart = fonteStart.render("START", True, preto)
         tela.blit(textoStart, (330,482))
 
         
