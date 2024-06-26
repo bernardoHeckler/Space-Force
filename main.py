@@ -119,6 +119,7 @@ def jogar(nome):
             alien_rect.x = random.randint(0, 600) 
             alien_rect.y = random.randint(0, 600) 
             pygame.mixer.Sound.play(tpSound)
+            pygame.mixer.music.play(10)
 
 
         tela.fill(branco)
@@ -141,6 +142,9 @@ def jogar(nome):
             velocidadeMissel += 1
             posicaoXMissel = random.randint(0, 800 - larguraMissel)
             pygame.mixer.Sound.play(missileSound)
+            
+            
+
 
         tela.blit(asteroide, (posicaoXMissel, posicaoYMissel))
 
@@ -151,6 +155,7 @@ def jogar(nome):
             velocidadeMisselVermelho += 1
             posicaoXMisselVermelho = random.randint(0, 800 - larguraMisselVermelho)
             pygame.mixer.Sound.play(missileSound)
+        
 
         tela.blit(asteroideVermelho, (posicaoXMisselVermelho, posicaoYMisselVermelho))
 
@@ -214,7 +219,7 @@ def dead(nome, pontos):
         textoEnter = fonte.render("Press enter to continue...", True, branco)
         tela.blit(textoEnter, (60,482))
         pygame.display.update()
-        relogio.tick(60)
+        relogio.tick(120)
 
 
 def ranking():
