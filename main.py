@@ -16,7 +16,7 @@ tamanho = (800,600)
 tela = pygame.display.set_mode( tamanho ) 
 pygame.display.set_caption("Iron Man do Marcão")
 pygame.display.set_icon(icone)
-missileSound = pygame.mixer.Sound("Recursos/missile.wav")
+missileSound = pygame.mixer.Sound("Recursos/missile.mp3")
 explosaoSound = pygame.mixer.Sound("Recursos/explosao.wav")
 fonte = pygame.font.SysFont("comicsans",28)
 fonteStart = pygame.font.SysFont("comicsans",55)
@@ -32,7 +32,7 @@ def jogar(nome):
     pygame.mixer.Sound.play(missileSound)
     pygame.mixer.music.play(-1)
     posicaoXPersona = 300
-    posicaoYPersona = 490
+    posicaoYPersona = 450
     movimentoXPersona  = 0
     movimentoYPersona  = 0
     posicaoXMissel = 400
@@ -63,8 +63,8 @@ def jogar(nome):
         
         if posicaoXPersona < 0 :
             posicaoXPersona = 10
-        elif posicaoXPersona >550:
-            posicaoXPersona = 540
+        elif posicaoXPersona > 650:
+            posicaoXPersona = 640
             
         if posicaoYPersona < 0 :
             posicaoYPersona = 10
@@ -186,7 +186,7 @@ def ranking():
 
 
 def start():
-    nome = simpledialog.askstring("Iron Man","Nome Completo:")
+    nome = simpledialog.askstring("Space Force","Nome Completo:")
     
     
     

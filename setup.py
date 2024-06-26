@@ -3,7 +3,7 @@ import cx_Freeze
 executaveis = [ 
                cx_Freeze.Executable(script="main.py", icon="Recursos/icone.ico") ]
 cx_Freeze.setup(
-    name = "Iron Man",
+    name = "Space Force",
     options={
         "build_exe":{
             "packages":["pygame"],
