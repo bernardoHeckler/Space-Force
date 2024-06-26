@@ -7,12 +7,11 @@ pygame.init()
 
 relogio = pygame.time.Clock()
 icone  = pygame.image.load("Recursos/icone.png")
-iron = pygame.image.load("Recursos/iron.png")
+nave = pygame.image.load("Recursos/nave.png")
 fundo = pygame.image.load("Recursos/fundo.png")
 fundoStart = pygame.image.load("Recursos/fundoStart.png")
 fundoDead = pygame.image.load("Recursos/fundoDead.png")
-
-missel = pygame.image.load("Recursos/missile.png")
+asteroide = pygame.image.load("Recursos/asteroide.png")
 tamanho = (800,600)
 tela = pygame.display.set_mode( tamanho ) 
 pygame.display.set_caption("Iron Man do Marcão")
@@ -27,20 +26,19 @@ pygame.mixer.music.load("Recursos/ironsound.mp3")
 branco = (255,255,255)
 preto = (0, 0 ,0 )
 
-
 def jogar(nome):
     pygame.mixer.Sound.play(missileSound)
     pygame.mixer.music.play(-1)
-    posicaoXPersona = 400
-    posicaoYPersona = 300
+    posicaoXPersona = 300
+    posicaoYPersona = 490
     movimentoXPersona  = 0
     movimentoYPersona  = 0
     posicaoXMissel = 400
     posicaoYMissel = -240
     velocidadeMissel = 1
     pontos = 0
-    larguraPersona = 250
-    alturaPersona = 127
+    larguraPersona = 350
+    alturaPersona = 227
     larguaMissel  = 50
     alturaMissel  = 250
     dificuldade  = 20
@@ -57,14 +55,6 @@ def jogar(nome):
                 movimentoXPersona = 0
             elif evento.type == pygame.KEYUP and evento.key == pygame.K_LEFT:
                 movimentoXPersona = 0
-            elif evento.type == pygame.KEYDOWN and evento.key == pygame.K_UP:
-                movimentoYPersona = -10
-            elif evento.type == pygame.KEYDOWN and evento.key == pygame.K_DOWN:
-                movimentoYPersona = 10
-            elif evento.type == pygame.KEYUP and evento.key == pygame.K_UP:
-                movimentoYPersona = 0
-            elif evento.type == pygame.KEYUP and evento.key == pygame.K_DOWN:
-                movimentoYPersona = 0
                 
         posicaoXPersona = posicaoXPersona + movimentoXPersona            
         posicaoYPersona = posicaoYPersona + movimentoYPersona            
@@ -83,7 +73,7 @@ def jogar(nome):
         tela.fill(branco)
         tela.blit(fundo, (0,0) )
         #pygame.draw.circle(tela, preto, (posicaoXPersona,posicaoYPersona), 40, 0 )
-        tela.blit( iron, (posicaoXPersona, posicaoYPersona) )
+        tela.blit( nave, (posicaoXPersona, posicaoYPersona) )
         
         posicaoYMissel = posicaoYMissel + velocidadeMissel
         if posicaoYMissel > 600:
@@ -94,7 +84,7 @@ def jogar(nome):
             pygame.mixer.Sound.play(missileSound)
             
             
-        tela.blit( missel, (posicaoXMissel, posicaoYMissel) )
+        tela.blit( asteroide, (posicaoXMissel, posicaoYMissel) )
         
         texto = fonte.render(nome+"- Pontos: "+str(pontos), True, branco)
         tela.blit(texto, (10,10))
