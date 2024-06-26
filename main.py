@@ -8,7 +8,7 @@ pygame.init()
 relogio = pygame.time.Clock()
 icone  = pygame.image.load("Recursos/icone.png")
 nave = pygame.image.load("Recursos/nave.png")
-fundo = pygame.image.load("Recursos/fundo.png")
+fundo = pygame.image.load("Recursos/estratosferaFundoDeTela.png")
 fundoStart = pygame.image.load("Recursos/fundoStart.png")
 fundoDead = pygame.image.load("Recursos/fundoDead.png")
 asteroide = pygame.image.load("Recursos/asteroide.png")
@@ -34,13 +34,13 @@ def jogar(nome):
     movimentoXPersona  = 0
     movimentoYPersona  = 0
     posicaoXMissel = 400
-    posicaoYMissel = -240
+    posicaoYMissel = -90
     velocidadeMissel = 1
     pontos = 0
-    larguraPersona = 350
-    alturaPersona = 227
-    larguaMissel  = 50
-    alturaMissel  = 250
+    larguraPersona = 150
+    alturaPersona = 149
+    larguaMissel  = 100
+    alturaMissel  = 76
     dificuldade  = 20
 
     while True:
