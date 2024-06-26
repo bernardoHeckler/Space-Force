@@ -70,18 +70,18 @@ def jogar(nome):
 
     alien_rect = alien.get_rect()
     alien_rect.x = random.randint(0, 800)
-    alien_rect.y = random.randint(300, 600)  # Posição vertical aleatória inicial do alien
+    alien_rect.y = random.randint(300, 600) 
 
     alien_speed = 3
     direita = True
 
-    alien_vertical_speed = random.choice([2, 10])  # Velocidade vertical aleatória do alien
-    alien_reappear_chance = 0.005 # Chance de o alien reaparecer em uma nova posição
+    alien_vertical_speed = random.choice([2, 10]) 
+    alien_reappear_chance = 0.005 
 
-    raio = 50
-    pulso_velocidade = 1
-    max_raio = 60
-    min_raio = 40
+    raio = 60
+    pulso_velocidade = 0.05
+    max_raio = 70
+    min_raio = 50
 
     while True:
         for evento in pygame.event.get():
@@ -107,17 +107,17 @@ def jogar(nome):
         if alien_rect.x > 800 - alien_rect.width or alien_rect.x < 0:
             direita = not direita
 
-        # Movimento vertical aleatório do alien
+    
         alien_rect.y += alien_vertical_speed
         if alien_rect.y < 0:
             alien_vertical_speed = 1
         elif alien_rect.y > 600 - alien_rect.height:
             alien_vertical_speed = -1
 
-        # Verifica se o alien deve reaparecer em uma nova posição aleatória
+       
         if random.random() < alien_reappear_chance:
-            alien_rect.x = random.randint(0, 600)  # Reinicia o alien fora da tela à direita
-            alien_rect.y = random.randint(0, 600)  # Nova posição vertical aleatória
+            alien_rect.x = random.randint(0, 600) 
+            alien_rect.y = random.randint(0, 600) 
             pygame.mixer.Sound.play(tpSound)
 
 
@@ -175,7 +175,7 @@ def jogar(nome):
                 return
 
         pygame.display.update()
-        relogio.tick(60)
+        relogio.tick(120)
 
 
 def dead(nome, pontos):
